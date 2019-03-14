@@ -1,0 +1,103 @@
+a.	One obstacle that I had to overcome was trying to figure out where to start. Especially because we learned a lot of new material 
+	this week so it was difficult trying to figure out when to use what because there are so many ways to code the same program. 
+	It was also difficult to make sure my program takes all the different possible poll data strings into account. 
+
+b.	changeToUpper:
+	repeatedly
+	change every character of given string to uppercase
+
+	
+	
+	hasCorrectSyntax:
+	call changeToUpper
+	
+	check if the given string is empty
+		return true
+
+	repeatedly
+		check if first two letters of state forecast constitutes a US state
+			if not so return false
+		check if character after state code is a number
+			if not so return false
+		increment the index of the given string by 2 (state code has 2 letters)
+		counting at most two times
+			increment index by number of consecutive numbers
+			check if character after numbers is a letter
+				if not so return false
+			if so return true
+
+
+
+	countVotes:
+	check if given string has correct syntax
+		if not so return 1
+	check if given party is a letter
+		if not so return 3
+	as long as given string isn't empty
+		repeatedly
+			check if a letter is followed by 0
+				if so return 2
+	repeatedly
+		if there are two consecutive numbers followed by given party
+			add the number to total number of votes
+			increment index by 2
+		otherwise if there is one number followed by given party
+			add number to total number of votes
+	return 0
+
+c.	"CA50d"										one state forecast
+	"FL4RCA30tDC29d"							multiple state forecasts
+	"CA"										only has state code
+	"CA 34"										has a space and no party
+	"HI23"										doesn't contain party
+	"HId30"										party before votes
+	"ZZ20p"										invalid state code
+	""											empty string
+	"NV425CA34dnY98c"							number more than 3 digits and state codes have both upper and lower case
+	"CA72dFl87rnY65dwv76rDC76DRI23iWy56R"		another multiple state forecasts
+	"a"											one letter
+	"TX34@"										party isn't a letter
+
+
+	int votes;
+	string a = "CA50d";
+	string b = "FL4RCA30tDC29d";
+	string c = "CA";
+	string d = "CA 34";
+	string e = "HI23";
+	string f = "HId30";
+	string g = "ZZ20p";
+	string h = "";
+	string i = "NV425CA34dnY98c";
+	string j = "CA72dFl87rnY65dwv76rDC76DRI23iWy56R";
+	string k = "a";
+	string l = "TX34@";
+
+	//assert(hasCorrectSyntax(a));
+	assert(countVotes(a, 'd', votes) == 0 && votes == 50);
+	assert(hasCorrectSyntax(b));
+	assert(countVotes(b, 't', votes) == 0 && votes == 30);
+	votes = -999;
+	assert(!hasCorrectSyntax(c));
+	assert(countVotes(c, 'd', votes) == 1 && votes == -999);
+	assert(!hasCorrectSyntax(d));
+	assert(countVotes(d, 'd', votes) == 1);
+	assert(!hasCorrectSyntax(e));
+	assert(countVotes(e, 'd', votes) == 1);
+	assert(!hasCorrectSyntax(f));
+	assert(countVotes(f, 'd', votes) == 1);
+	assert(!hasCorrectSyntax(g));
+	assert(countVotes(g, 'd', votes) == 1);
+	assert(hasCorrectSyntax(h));
+	assert(countVotes(h, 'd', votes) == 0 && votes == 0);
+	assert(!hasCorrectSyntax(i));
+	assert(countVotes(i, 'd', votes) == 1);
+	assert(hasCorrectSyntax(j));
+	assert(countVotes(j, 'd', votes) == 0 && votes == 213);
+	assert(countVotes(j, 'r', votes) == 0 && votes == 219);
+	assert(!hasCorrectSyntax(k));
+	assert(countVotes(k, 'd', votes) == 1);
+	assert(!hasCorrectSyntax(l));
+	assert(countVotes(l, '@', votes) == 1);
+
+	cout << "All tests succeeded" << endl;
