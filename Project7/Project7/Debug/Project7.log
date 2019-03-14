@@ -1,0 +1,4 @@
+﻿  rats.cpp
+c:\users\angela wu\documents\visual studio 2015\projects\project7\project7\rats.cpp(174): warning C5030: attribute 'gnu::unused' is not recognized
+  Project7.vcxproj -> C:\Users\Angela Wu\documents\visual studio 2015\Projects\Project7\Debug\Project7.exe
+  Project7.vcxproj -> C:\Users\Angela Wu\documents\visual studio 2015\Projects\Project7\Debug\Project7.pdb (Partial PDB)

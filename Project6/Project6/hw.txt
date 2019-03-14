@@ -1,0 +1,329 @@
+1.	The subparts to this problem involve errors in the use of pointers.
+
+	a.	This program is supposed to write 30 20 10, one per line. Find all of the bugs and show a fixed version of the program:
+
+	bugs: 
+	*ptr + 1 = 20;		// set arr[1] to 20
+	In order for arr[1] to be set to 20, we need to move the pointer over one element first because it is currently pointing to arr[0]. Then it takes the value
+	of the new pointer and sets it to 20. This line of code does not do this because it finds the value ptr is pointing to (arr[0]) before moving the pointer one 
+	element to the right.
+
+	 while (ptr >= arr)
+        {
+            ptr--;
+            cout << *ptr << endl;    // print values
+        }
+	In order for the code to print out 30 20 10, it needs to print out the numbers in the array from left to right. This code currently is printing the numbers 
+	in the array from right to left starting from the second element, which means that the third number that is printed is not defined in the array. To fix this 
+	problem, we can increment i and print out the number that is in the index at i - 2 because ptr is currently pointing at the third element. We stop the while
+	loop by changing the inequality to ptr <= arr + 4.
+
+    int main()
+    {
+        int arr[3] = { 5, 10, 15 };
+        int* ptr = arr;
+
+        *ptr = 30;          // set arr[0] to 30
+        *(ptr + 1) = 20;      // set arr[1] to 20
+        ptr += 2;
+        ptr[0] = 10;        // set arr[2] to 10
+
+        while (ptr <= arr + 4)
+		{
+			cout << *(ptr - 2) << endl;    // print values
+			ptr++;
+		}
+    }
+
+
+	b.	The findMax function is supposed to find the maximum item in an array and set the pToMax parameter to point 
+		to that item so that the caller knows that item's location. Explain why this function won't do that, and show 
+		a way to fix it. Your fix must be to the function only; you must not change the main routine below in any way, 
+		yet as a result of your fixing the function, the main routine below must work correctly.
+
+		The function has an error because the main function tries to print out ptr and *ptr when it remains uninitialized after calling findMax. This can be 
+		fixed by using a reference pointer in the parameter of findMax.
+
+    void findMax(int arr[], int n, int*& pToMax)
+    {
+        if (n <= 0) 
+            return;      // no items, no maximum!
+    
+        pToMax = arr;
+
+        for (int i = 1; i < n; i++)
+        {
+            if (arr[i] > *pToMax)
+                 pToMax = arr + i;
+        }
+    }       
+
+    int main()
+    {
+        int nums[4] = { 5, 3, 15, 6 };
+        int* ptr;
+
+        findMax(nums, 4, ptr);
+        cout << "The maximum is at address " << ptr << endl;
+        cout << "It's at position " << ptr - nums << endl;
+        cout << "Its value is " << *ptr << endl;
+    }
+
+
+	c.	The computeCube function is correct, but the main function has a problem. Explain why it may not work and show a way to fix it. 
+		Your fix must be to the main function only; you must not change computeCube in any way.
+
+		The function won't work because the pointer parameter in findMax is passed as an uninitialized pointer in the main function.
+		This can be fixed by initializing the pointer to a reference to an int variable the main function.
+
+    void computeCube(int n, int* ncubed)
+    {
+        *ncubed = n * n * n;
+    }
+
+    int main()
+	{
+		int a;
+		int* ptr = &a;
+		computeCube(5, ptr);
+		cout << "Five cubed is " << *ptr << endl;
+	}
+
+	d	The strequal function is supposed to return true if and only if its two C string arguments have exactly same text. 
+		Explain what the problems with the implementation of the function are, and show a way to fix them.
+		
+		The code compares str1 and str2 in the incorrect way. 
+		while (str1 != 0  &&  str2 != 0) is supposed to mean while(we haven't finished looking through the loop). However, it is actually saying while(the first 
+		element of both arrays is not a null byte). To fix this, we can create two pointers, each pointing to one of the arrays, and use the comparison 'as long as 
+		the position of the pointer is less than or equal to the last element of the array.'
+
+		if (str1 != str2) is supposed to be comparing the values of the elements in the corresponding positions in the array. Instead, it is comparing the first two
+		elements only because str1 = &str1[0] and str2 = &str2[0]. To fix this we could use the pointers we created and get their values with *. And instead of 
+		incrementing str1 and str2, we would be incrementing the two pointers.
+
+      // return true if two C strings are equal
+	bool strequal(char str1[], char str2[])
+	{
+		char* a = str1;
+		char* b = str2;
+		while (a <= str1 + strlen(str1) && b <= str2 + strlen(str2))
+	{
+		if (*a != *b)  // compare corresponding characters
+			return false;
+		a++;            // advance to the next character
+		b++;
+	}
+	return *a == *b;   // both ended at same time?
+}
+
+	int main()
+	{
+		char a[15] = "Zhao";
+		char b[15] = "Zhao";
+
+		if (strequal(a, b))
+			cout << "They're the same person!\n";
+	}
+
+	e.	This program is supposed to write 100 99 98 3 2 1, but it probably does not. What is the program doing that is incorrect? (We're not asking you explain 
+		why the incorrect action leads to the particular outcome it does, and we're not asking you to propose a fix to the problem.)
+
+		From line 4 and onwards in the main function, the program is trying to get elements from an array that is in another function. This doesn't work out 
+		because those elements don't exist in the main function. Only the first item printed is correct because ptr was assignedthat value in the main 
+		function.
+
+		
+   #include <iostream>
+    using namespace std;
+
+    int* getPtrToArray(int& m)
+    {
+        int anArray[100];
+        for (int j = 0; j < 100; j++)
+            anArray[j] = 100-j;
+        m = 100;
+        return anArray;
+    }
+
+    void f()
+    {
+        int junk[100];
+        for (int k = 0; k < 100; k++)
+            junk[k] = 123400000 + k;
+    }
+
+    int main()
+    {
+        int n;
+        int* ptr = getPtrToArray(n);
+        f();
+        for (int i = 0; i < 3; i++)
+            cout << ptr[i] << ' ';
+        for (int i = n-3; i < n; i++)
+            cout << ptr[i] << ' ';
+        cout << endl;
+    }
+
+2.	For each of the following parts, write a single C++ statement that performs the indicated task. For each part, assume that 
+	all previous statements have been executed (e.g., when doing part e, assume the statements you wrote for parts a through d have 
+	been executed).
+
+	a.	Declare a pointer variable named cat that can point to a variable of type double.	
+		double* cat;
+	b.	Declare mouse to be a 5-element array of doubles.	
+		double mouse[5];
+	c.	Make the cat variable point to the last element of mouse.	
+		*cat = mouse[4];
+	d.	Make the double pointed to by cat equal to 25, using the * operator.	
+		*cat = 25
+	e.	Without using the cat pointer, and without using square brackets, set the fourth element (i.e., the one at position 3) of 
+		the mouse array to have the value 42.	
+		*(mouse + 3) = 42;
+	f.	Move the cat pointer back by three doubles.		
+		cat -= 3;
+	g.	Using square brackets, but without using the name mouse, set the third element (i.e., the one at position 2) of the mouse array 
+		to have the value 54.	
+		cat is pointing to mouse[1] -> cat[1] = 54;
+	h.	Without using the * operator or the name mouse, but using square brackets, set the double pointed to by cat to have the value 17.	
+		cat[0] = 17;
+	i.	Using the * operator in the initialization expression, declare a bool variable named b and initialize it to true if the double 
+		pointed to by cat is equal to the double immediately following the double pointed to by cat, and false otherwise.	
+		bool b = (*cat == *(cat + 1));
+	j.	Using the == operator in the initialization expression, declare a bool variable named d and initialize it to true if cat points 
+		to the double at the start of the mouse array, and false otherwise.
+		bool d = (cat == mouse);
+
+3.	a.	Rewrite the following function so that it returns the same result, but does not increment the variable ptr. Your new program must 
+		not use any square brackets, but must use an integer variable to visit each double in the array. You may eliminate any unneeded 
+		variable.
+
+    double mean(const double* scores, int numScores)
+    {
+        const double* ptr = scores;
+        double tot = 0;
+        while (ptr != scores + numScores)
+        {
+            tot += *ptr;
+            ptr++;
+        }
+        return tot/numScores;
+    }
+
+	double mean(const double* scores, int numScores)
+	{
+		const double* ptr = scores;
+		double tot = 0;
+		for (int i = 0; i < numScores; i++) {
+			tot += *(ptr + i);
+		}
+		return tot/numScores;
+	}
+
+	b.	Rewrite the following function so that it does not use any square brackets (not even in the parameter declarations) but does 
+		use the integer variable k. Do not use any of the <cstring> functions such as strlen, strcpy, etc.
+
+    // This function searches through str for the character chr.
+    // If the chr is found, it returns a pointer into str where
+    // the character was first found, otherwise nullptr (not found).
+
+    const char* findTheChar(const char str[], char chr)
+    {
+        for (int k = 0; str[k] != 0; k++)
+            if (str[k] == chr)
+                return &str[k];
+
+        return nullptr;
+    }
+
+	const char* findTheChar(const char* str, char chr)
+	{
+		const char* ptr = str;
+		for (int k = 0; *(str + k) != '\0'; k++)
+			if (*(str + k) == chr)
+				return str + k;
+		return nullptr;
+	}
+	c.	Now rewrite the function shown in part b so that it uses neither square brackets nor any integer variables. Your new function must 
+		not use any local variables other than the parameters. Do not use any of the <cstring> functions such as strlen, strcpy, etc.
+
+	const char* findTheChar(const char* str, char chr)
+	{
+		while (str != '\0') {
+			if (*str == chr) {
+				return str;
+			}
+			str++;
+		}
+		return nullptr;
+	}
+
+4.	What does the following program print and why? Be sure to explain why each line of output prints the way it does to get full credit.
+
+    #include <iostream>
+    using namespace std;
+
+    int* maxwell(int* a, int* b)
+    {
+        if (*a > *b)
+            return a;
+        else
+            return b;
+    }
+
+    void swap1(int* a, int* b)
+    {
+        int* temp = a;
+        a = b;
+        b = temp;
+    }
+
+    void swap2(int* a, int* b)
+    {
+        int temp = *a;
+        *a = *b;
+        *b = temp;
+    }
+
+    int main()
+    {
+        int array[6] = { 5, 3, 4, 17, 22, 19 };
+
+        int* ptr = maxwell(array, &array[2]);	//returns pointer pointing to the element that is larger, ptr points to element in array[0]
+        *ptr = -1;		changes value ptr is pointing to to -1, now array[0] = -1, { -1, 3, 4, 17, 22, 19 }
+        ptr += 2;		moves ptr to the right 2 times, ptr points to element at array[2]
+        ptr[1] = 9;		changes element after the one ptr is pointing at to 9, array[3] = 9, { -1, 3, 4, 9, 22, 19 }
+        *(array+1) = 79;	changes the value of the element at array[1] to 79, { -1, 79, 4, 9, 22, 19 }
+
+        cout << &array[5] - ptr << endl;	// prints out the distance between the pointer pointing to array[5] and ptr, 
+											//which is pointing at array[2], prints out 3
+		swap1(&array[0], &array[1]);	//swaps the pointers' locations
+        swap2(array, &array[2]);	//swaps the pointers' values
+
+        for (int i = 0; i < 6; i++)
+            cout << array[i] << endl;	// prints out 4 79 -1 9 22 19
+    } 
+5.	Write a function named removeS that accepts one character pointer as a parameter and returns no value. The parameter is a C string. 
+	This function must remove all of the upper and lower case 's' letters from the string. The resulting string must be a valid C string.
+
+	Your function must declare no more than one local variable in addition to the parameter; that additional variable must be of a pointer type. 
+	Your function must not use any square brackets and must not use any of the <cstring> functions such as strlen, strcpy, etc.
+
+    void removeS(char* str) {
+		char* ptr;
+		for (ptr = str; *ptr != '\0'; ptr++) {
+			if (*ptr == 's' || *ptr == 'S') {
+				for (str = ptr; *str != '\0'; str++)
+					*str = *(str + 1);
+				ptr--;
+			}
+		}
+	}
+	
+	int main()
+    {
+        char msg[50] = "She'll be a massless princess.";
+        removeS(msg);
+        cout << msg;  // prints   he'll be a male prince.
+    }
+
+	
