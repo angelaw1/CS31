@@ -1,0 +1,4 @@
+﻿  satisfy.cpp
+c:\users\angela wu\documents\visual studio 2015\projects\project5\project5\satisfy.cpp(227): warning C4018: '<': signed/unsigned mismatch
+  Project5.vcxproj -> C:\Users\Angela Wu\documents\visual studio 2015\Projects\Project5\Debug\Project5.exe
+  Project5.vcxproj -> C:\Users\Angela Wu\documents\visual studio 2015\Projects\Project5\Debug\Project5.pdb (Partial PDB)

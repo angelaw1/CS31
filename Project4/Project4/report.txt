@@ -1,0 +1,93 @@
+a. An obstacle I had to overcome was testing all the different functions. In previous projects, there were only a couple functions. However, this 
+	project had quite a few. I always feel the need to test my functions thoroughly so it took more time doing so in this projet.
+
+b.  string a[8] = { "Bob", "Bill", "", "Angela", "Jill", "Steve", "Stacy", "Jill" };
+	assert(lookup(a, 3, "Angela") == -1);										in array but not within boundaries of interested elements
+	assert(lookup(a, 8, "angela") == -1);										not in array
+	assert(lookup(a, 8, "Jill") == 4);											in array and within boundaries of interested elements
+	assert(lookup(a, -5, "Steve") == -1);										n is negative
+	assert(lookup(a, 0, "Angela") == -1);										n is 0
+	assert(positionOfMax(a, 1) == 0);											only look at one element
+	assert(positionOfMax(a, 3) == 0);											look at part of the array
+	assert(positionOfMax(a, 8) == 5);											look hrough entire array
+	assert(positionOfMax(a, 0) == -1);											look at no elements
+
+	string b[7] = { "Bob", "Bill", "Bill", "Bob", "Angela", "Steve" };
+	assert(positionOfMax(b, 4) == 0);											there are two max elements
+	assert(countRuns(b, 6) == 5);												look through entire array
+	assert(countRuns(b, 4) == 3);												look through part of array	
+	assert(countRuns(b, 0) == 0);												look at no elements
+
+	string c[7] = { "Bob", "Bill", "Bob", "Angela", "Stacy", "Bobby", "Steve" };
+	string d[4] = { "Bob", "Angela", "Stacy", "Bobby" };
+	string e[7] = { "Bob", "Bill", "Bob", "Steve", "", "Bobby", "Angela" };
+	string f[4] = { "Bob", "Bill", "Bob", "Steve" };
+	assert(differ(c, 7, d, 4) == 1);											standard case
+	assert(differ(c, 7, e, 7) == 3);											first three are same
+	assert(differ(c, 3, e, 3) == 3);											all interested elements in both arrays are same
+	assert(differ(e, 7, f, 4) == 4);											one array runs out of elements first
+	assert(subsequence(c, 7, d, 4) == 2);										first element of second array appears twice in first array
+	assert(subsequence(c, 7, d, 0) == 0);										look at no elements from second array
+	assert(subsequence(c, 5, d, 4) == -1);										subsequence in array but not within boundaries of interested elements
+	assert(subsequence(e, 3, f, 4) == -1);										subsequence is longer than first array
+	assert(subsequence(e, 0, f, 0) == 0);										look at no elements for both arrays
+
+	string g[5] = { "Bill", "Bobby", "Hillary", "Jill", "Eva" };
+	string h[7] = { "Evan", "Hillary" ,"Hillary", "Billy", "Bobby", "Bob", "Steve" };
+	assert(lookupAny(g, 5, h, 7) == 1);											standard case
+	assert(lookupAny(g, 0, h, 7) == -1);										look at no elements of first array
+	assert(lookupAny(h, 1, g, 5) == -1);										same element doesn't exist in both arrays
+
+	string i[6] = { "Steve", "Jill", "Eva", "Bob", "Bill", "Evan" };
+	assert(appendToAll(i, 4, "!!!") == 4);										standard case
+	assert(i[0] == "Steve!!!" && i[1] == "Jill!!!" && i[2] == "Eva!!!" 
+		&& i[3] == "Bob!!!" && i[4] == "Bill");
+
+	string j[6] = { "Steve", "Jill", "Eva", "Bob", "Bill", "Evan" };
+	string k[6] = { "Steve", "Jill", "Eva", "Bob", "Bill", "Evan" };
+	assert(rotateLeft(j, 0, 0) == 0);											doesn't rotate anything
+	assert(j[0] == "Steve" && j[1] == "Jill");
+	assert(rotateLeft(j, 2, 5) == -1);											start position greater than terminating position (n)
+	assert(rotateLeft(j, 6, 2) == 2);											standard case
+	assert(j[0] == "Steve" && j[1] == "Jill" && j[2] == "Bob"					
+		&& j[3] == "Bill" && j[4] == "Evan" && j[5] == "Eva");
+	assert(rotateLeft(k, 0, 0) == 0);											empty array
+
+	string l[6] = { "Steve", "Jill", "Eva", "Bob", "Bill", "Evan" };
+	string m[6] = { "Steve", "Jill", "Eva", "Bob", "Bill", "Evan" };
+	assert(flip(l, 0) == 0);													flip no elements
+	assert(l[0] == "Steve" && l[1] == "Jill");
+	assert(flip(l, 1) == 1);													first element flips with itself
+	assert(l[0] == "Steve" && l[1] == "Jill");
+	assert(flip(l, 6) == 6);													standard case, flip entire array, even number of elements
+	assert(l[0] == "Evan" && l[1] == "Bill" && l[2] == "Bob"
+		&& l[3] == "Eva" && l[4] == "Jill" && l[5] == "Steve");
+	assert(flip(m, 3) == 3);													flip part of array, odd number of elements
+	assert(m[0] == "Eva" && m[1] == "Jill"
+		&& m[2] == "Steve" && m[3] == "Bob");
+
+	string n[6] = { "Steve", "Jill", "Eva", "Bob", "Bill", "Evan" };
+	string o[7] = { "Steve", "Jill", "Eva", "Bob", "Bill", "Evan", "Jen" };
+	string p[5] = { "Steve", "Steve", "Steve", "Steve", "Steve" };
+	string q[6] = { "Evan", "Jen", "Jennie", "Lisa", "Jennie", "Jill" };
+	string r[6] = { "Evan", "Jen", "Jennie", "Jennie", "Jill", "Lisa" };
+	string s[6] = { "Steve", "Jennie", "Lisa", "Jill", "Jen", "Evan" };
+	assert(separate(n, 6, "Aaron") == 0);										all elements greater than separator
+	assert(separate(n, 6, "ZZZZZZ") == 6);										all elements less than separator
+	assert(separate(n, 6, "Evan") == 3);										standard case, separator in array
+	assert(n[0] == "Eva" && n[1] == "Bob" && n[2] == "Bill"
+		&& n[3] == "Evan" && n[4] == "Steve" && n[5] == "Jill");
+	assert(separate(o, 7, "Jennie") == 5);										separator not in array
+	assert(o[0] == "Eva" && o[1] == "Bob" && o[2] == "Bill"
+		&& o[3] == "Evan" && o[4] == "Jen" && o[5] == "Jill" 
+		&& o[6] == "Steve");
+	assert(separate(p, 5, "Steve") == 0);										array contains same element throughout
+	assert(separate(q, 6, "Jennie") == 2);										two separators in array
+	assert(q[0] == "Evan" && q[1] == "Jen" && q[2] == "Jennie"
+		&& q[3] == "Jennie" && q[4] == "Lisa" && q[5] == "Jill");
+	assert(separate(r, 6, "Jennie") == 2);										array already arranged correctly
+	assert(r[0] == "Evan" && r[1] == "Jen" && r[2] == "Jennie"
+		&& r[3] == "Jennie" && r[4] == "Jill"&& r[5] == "Lisa"); 
+	assert(separate(s, 6, "Jen") == 1);											array arranged in opposite way
+	assert(s[0] == "Evan" && s[1] == "Jen" && s[2] == "Lisa"
+		&& s[3] == "Jill" && s[4] == "Steve" && s[5] == "Jennie");

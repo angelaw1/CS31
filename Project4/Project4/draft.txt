@@ -1,0 +1,26 @@
+int index = 0;
+	//checks to see if separator is in string a
+	bool isSeparatorInString;
+	if (n < 0)
+		return -1;
+	for (int i = 0; i < n; i++) {
+		if (a[i] >= separator) {
+			for (int j = i + 1; j < n; j++) {
+				if (a[j] < separator) {
+					string temp;
+					index = i + 1;
+					temp = a[i];
+					a[i] = a[j];
+					a[j] = temp;
+					break;
+				}
+				else if (a[j] == separator)
+					isSeparatorInString = true;
+			}
+		}
+	}
+	if (isSeparatorInString) {
+		for (int i = index; i < n; i++) {
+			if (a[i] == separator)
+		}
+	}

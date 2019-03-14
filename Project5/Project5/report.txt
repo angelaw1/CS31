@@ -1,0 +1,130 @@
+a.	A brief description of notable obstacles you overcame.
+	A notable obstacle I had to overcome was working with c strings and 2-d arrays. I also had a lot of difficulty getting the indices correct for my 
+	for loops and keeping track of all the elements. 
+b.	A description of the design of your program. You should use pseudocode in this description where it clarifies the presentation.
+	changeToLower
+		change all characters to its lower case form
+	shiftUp for 2d array
+		move all c strings up array 
+		put null byte at end of c string
+	shiftUp for 1d array
+		move all charactersup one index
+	normalizeRules
+		change nRules to 0 if negative
+		change all characters in word1 and word2 to lower case
+		start checking rules from the end to beginning
+			as long as words in word1 and word2 aren't all checked
+				if character in word1/2 isn't a letter or a word contains no characters or distance is negative
+					shift all rules after the rule that meets these conditions up
+					decrement nRules by 1
+		return nRules
+	isMatch
+		look through all characters of arr2
+			if arr2 is not contained in arr1 starting at index startPos
+				return false
+		return true if the character after arr2 contained in arr1 is a ' '
+		return false otherwise
+	isWithinRange
+		search through arr1, from startPos, as long as # of spaces is <= corresponding distance and we haven't reached end of arr1, repeatedly
+			increment space when encounter ' ' 
+			i is boundary in which arr2 has to be within arr1
+		search through arr1 from startPos to i, repeatedly
+			if a ' ' is found
+				check isMatch for arr1, arr2, with startPos at k
+					return true if isMatch
+		search through arr1 from startPos until space is greater than distance or we reach the beginning of arr1, repeatedly
+			increment space when we encounter ' '
+		search through arr1 from character before starPos to i, decrementing each time
+			if a ' ' is found
+				check isMatch for arr1, arr2, with startPos at k
+					return true if isMatch
+		return false otherwise
+	rearrangeDocument
+		copy original document into a new document
+		start new doc with ' '
+		search through entire original doc
+			if a character in original doc is ' ' and last character in new doc so far is not ' ' or character in original doc is a letter
+				copy character to end of new doc
+		if last character in new doc is not a ' '
+			insert ' ' at end
+		insert zero byte at end of new doc
+	calculateSatisfaction
+		make copy of original document
+		set all characters in new doc to lower case
+		use reaarangeDocument for new doc
+
+		set nRules to 0 if it was < than 0
+
+		search through all rules
+			set k to the length of new doc - length of word in word1
+			search through new doc from 1 until to k, repeatedly
+				if we find ' ' in new doc
+					check new doc and word1 using isMatch
+						if is Match check isWithinRange for new doc and corresponding word2 and distance
+							increment score if isWithinRange
+		return score
+c.	A list of the test data that you could use to thoroughly test your program, along with the reason for each test. You must note which 
+	test cases your program does not handle correctly. (This could happen if you didn't have time to write a complete solution, or if you ran 
+	out of time while still debugging a supposedly complete solution.) Notice that most of this portion of your report can be written just after 
+	reading the requirements in this specification, before you even start designing your program.
+
+	SATISFACTION SCORE
+	const int TEST2_NRULES = 4;
+	char test2w1[TEST2_NRULES][MAX_WORD_LENGTH + 1] = {
+		"bananas",	"monkey",	"climb",	"eat"
+	};
+	char test2w2[TEST2_NRULES][MAX_WORD_LENGTH + 1] = {
+		"ripe",		"hungry",	"tree",		"banana"
+	};
+	int test2dist[TEST2_NRULES] = {
+		1,			2,			2,			3
+	};
+	assert(calculateSatisfaction(test2w1, test2w2, test2dist, TEST2_NRULES,
+		"   The hungry     monkey      climbs  the tree for some ripe bananas") == 2);			multiple spaces
+	assert(calculateSatisfaction(test2w1, test2w2, test2dist, TEST2_NRULES,
+		"Hungry crazy monkey will climb palm tree to eat some ripe bananas") == 3);				standard
+	assert(calculateSatisfaction(test2w1, test2w2, test2dist, TEST2_NRULES,
+		"bananas ripe bananas ripe bananas ripe bananas ripe") == 1);							same rule repeated over and over again
+	assert(calculateSatisfaction(test2w1, test2w2, test2dist, TEST2_NRULES,
+		"eat 1 banana") == 1);																	one rule with number inserted in the middle
+	assert(calculateSatisfaction(test2w1, test2w2, test2dist, TEST2_NRULES,""
+		"hungr3y monk3ey loves to eat ripe bananas") == 2);										number inserted within word
+	assert(calculateSatisfaction(test2w1, test2w2, test2dist, TEST2_NRULES,
+		"hungry Monke3333333333y climbs tree for a ripe banana") == 1);							string of numbers within a word
+	assert(calculateSatisfaction(test2w1, test2w2, test2dist, TEST2_NRULES,
+		"hungry monkey") == 1);																	one rule
+	assert(calculateSatisfaction(test2w1, test2w2, test2dist, TEST2_NRULES,
+		"the monkey will eat a delicious ripe banana") == 0);									no rules
+	assert(calculateSatisfaction(test2w1, test2w2, test2dist, TEST2_NRULES,
+		"the monkey is eating a ripebanana") == 0);												no space between word 1 and word 2
+	assert(calculateSatisfaction(test2w1, test2w2, test2dist, TEST2_NRULES,
+		"") == 0);																				empty doc			
+	
+
+	NORMALIZE RULES
+	//TEST FOR PURPORTED RULES
+	/* char test[5][MAX_WORD_LENGTH + 1] = {
+		"CaT", "FeRRet", "mOUse", "rAT", "HoRSE"												upper and lower cases, non letter characters, negative distance
+	};
+	char test1[5][MAX_WORD_LENGTH + 1] = {
+		"pIG", "FrOg", "cAT", "d0NK3y", "tIGER"
+	};
+	int distance[5] = { 2, -1, 3, 2, 1 };
+	cout << normalizeRules(test, test1, distance, 5) << endl;
+	for (int i = 0; i < 5; i++)
+		cout << test[i] << test1[i] << distance[i] << endl;
+	return 9; */
+
+
+	//TEST FOR REPEATING RULES
+	/* char test[7][MAX_WORD_LENGTH + 1] = {
+		"CaT", "FeRRet", "mOUse", "rAT", "caT", "Dog", "moUse"									upper and lower cases, non letter characters, 
+	};																							multiple identical rules in same order and different order
+	char test1[7][MAX_WORD_LENGTH + 1] = {
+		"pIG", "FrOg", "cAT", "d0NK3y", "MousE", "RaBBit", "CAT"
+	};
+	int distance[7] = { 2, 1, 1, 2, 4, 1, 3 };
+	cout << normalizeRules(test, test1, distance, 7) << endl;
+	for (int i = 0; i < 7; i++)
+		cout << test[i] << test1[i] << distance[i] << endl;
+	return 9; */
